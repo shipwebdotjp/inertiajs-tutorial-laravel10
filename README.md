@@ -37,14 +37,14 @@ Read this [Wiki](https://github.com/ucan-lab/docker-laravel/wiki).
 ### app container
 
 - Base image
-  - [php](https://hub.docker.com/_/php):8.0-fpm-buster
-  - [composer](https://hub.docker.com/_/composer):2.0
+  - [php](https://hub.docker.com/_/php):8.1-fpm-buster
+  - [composer](https://hub.docker.com/_/composer):2.2
 
 ### web container
 
 - Base image
   - [nginx](https://hub.docker.com/_/nginx):1.18-alpine
-  - [node](https://hub.docker.com/_/node):14.2-alpine
+  - [node](https://hub.docker.com/_/node):20-alpine
 
 ### db container
 
