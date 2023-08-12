@@ -1,4 +1,4 @@
-# docker-laravel 🐳
+# Inertia.js Tutorial on laravel 10🐳
 
 ![License](https://img.shields.io/github/license/ucan-lab/docker-laravel?color=f05340)
 ![Stars](https://img.shields.io/github/stars/ucan-lab/docker-laravel?color=f05340)
@@ -7,20 +7,20 @@
 
 ## Introduction
 
-Build a simple laravel development environment with docker-compose.
+This is a Tutorial for Inertia.js on laravel 10
 
 ## Usage
 
 ```bash
-$ git clone git@github.com:ucan-lab/docker-laravel.git
-$ cd docker-laravel
+$ git clone https://github.com/shipwebdotjp/inertiajs-tutorial-laravel10.git
+$ cd inertiajs-tutorial-laravel10
 $ make create-project # Install the latest Laravel project
 $ make install-recommend-packages # Not required
 ```
 
 http://localhost
 
-Read this [Makefile](https://github.com/ucan-lab/docker-laravel/blob/master/Makefile).
+Read this [Inertia.js tutorial on SOHO MIND](https://blog.shipweb.jp/inertia-js-tutorial-1/).
 
 ## Tips
 
@@ -43,7 +43,7 @@ Read this [Wiki](https://github.com/ucan-lab/docker-laravel/wiki).
 ### web container
 
 - Base image
-  - [nginx](https://hub.docker.com/_/nginx):1.18-alpine
+  - [nginx](https://hub.docker.com/_/nginx):1.24-alpine
   - [node](https://hub.docker.com/_/node):20-alpine
 
 ### db container
