@@ -20,7 +20,7 @@ $ make install-recommend-packages # Not required
 
 http://localhost
 
-Read this [Inertia.js tutorial on SOHO MIND](https://blog.shipweb.jp/inertia-js-tutorial-1/).
+Read this article: [Inertia.js tutorial #2](https://blog.shipweb.jp/inertia-js-tutorial-2/).
 
 ## Tips
 
