@@ -20,4 +20,6 @@ Route::get('/', function () {
 
 Route::get('/HelloWorld', function () {
     return Inertia::render('HelloWorld');
-});
+})->name('helloworld.index');
+
+Route::get('/Bookmark',[App\Http\Controllers\BookmarkController::class, 'index'])->name('bookmark.index');
