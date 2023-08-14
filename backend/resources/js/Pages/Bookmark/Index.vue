@@ -1,12 +1,21 @@
-<script setup>
+<script>
 import { Link } from '@inertiajs/vue3'
 import Layout from '@/Pages/Layout.vue'
 
+export default {
+    layout: Layout,
+    mounted: function(){
+        document.title = "ブックマーク一覧";
+    },
+}
+</script>
+
+<script setup>
 defineProps({ bookmarks: Array })
 </script>
 
 <template>
-    <Layout title="ブックマーク一覧">
+    <div>
         <h2 class="text-lg border-b p-2">
             <Link :href="route('bookmark.index')" class="text-blue-700 underline">
             ブックマーク一覧
@@ -17,5 +26,5 @@ defineProps({ bookmarks: Array })
                 <a :href="bookmark.url" target=_blank class="text-blue-700" >{{ bookmark.title }}</a>
             </li>
         </ul>
-    </Layout>
+    </div>
 </template>
