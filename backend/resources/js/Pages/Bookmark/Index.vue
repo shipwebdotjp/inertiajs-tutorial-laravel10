@@ -1,6 +1,6 @@
 <script setup>
-import { ref, reactive, computed } from "vue";
-import { Link, router } from '@inertiajs/vue3'
+import { reactive, computed } from "vue";
+import { Link, router, useForm } from '@inertiajs/vue3'
 import Layout from '@/Pages/Layout.vue'
 
 const props = defineProps({ 
@@ -11,37 +11,20 @@ const props = defineProps({
         type: Object
     }
 });
-const newTitle = ref('');
-const newUrl = ref('');
-const cancelToken = reactive({cancel: false});
-
-const bookmarkError = computed(() => {
-    return props.errors.addBookmark || {}
+const form = useForm({
+    title: null,
+    url: null,
 });
 
-const addBookmark = () => {
-    router.visit(route('bookmark.store'),{
-        method: 'post',  //POSTメソッドで送信
-        data:{
-            title: newTitle.value, //送信データを指定
-            url: newUrl.value,
-        },
-        errorBag: 'addBookmark',    //エラーバッグ名を指定
-        preserveState: function(page){  //フォームの内容を保持するかどうか
-            return Object.keys(page.props.errors).length != 0 //エラーがあればフォームの内容を保持する
-        },
-        preserveScroll: true,   //スクロールポジションを維持する
-        onCancelToken: (_cancelToken) => (Object.assign(cancelToken, _cancelToken)),   //キャンセルトークンが発行されたらキャンセルトークンを保存
-        onBefore: (visit) => confirm('追加しますか？'), //リクエスト送信前に確認ダイアログを表示し、その結果に応じて続行・キャンセル
-        onStart: (visit) => { console.log( visit ) },   //リクエスト開始時に
-        onProgress: (progress) => { console.log( progress ) },  //リクエスト進行中
-        onSuccess: (page) => { console.log(  page ) },  //リクエスト成功時
-        onError: (errors) => {console.log( errors ) },  //エラー発生時
-        onCancel: () => {console.log( 'onCancel' ) },   //リクエストキャンセル時
-        onFinish: visit => {Object.assign(cancelToken, {cancel: false}); console.log( 'onFinish' )}, //リクエスト完了時。成功、エラー、キャンセルそれぞれのコールバック実行後に呼び出される
-
-    });
-};
+const submit = () => {
+    form
+    .transform((data) => ({
+        ...data,
+        title: data.title ? data.title : '無題',
+    }))
+    .post(route('bookmark.store'));
+    console.log("form posted");
+}
 </script>
 
 <template>
@@ -57,23 +40,27 @@ const addBookmark = () => {
                 <Link as="button" method="delete" :href="route('bookmark.delete',bookmark.id)" preserve-scroll :only="['bookmarks']" class="border border-red-400 m-1 p-1 text-sm text-red-400">削除</Link>
             </li>
         </ul>
-        <h3 class="border-l-4 p-1">ブックマーク追加</h3>
-        <div class="flex w-full">
-            <div class="w-20 text-right bg-gray-200 text-sm p-1 m-1">タイトル</div>
-            <div class="w-40">
-                <input type=text name=newTitle v-model="newTitle" size=15 class="p-1 m-1 text-sm w-full border" />
+        <form @submit.prevent="submit">
+            <h3 class="border-l-4 p-1">ブックマーク追加</h3>
+            <div class="flex w-full">
+                <div class="w-20 text-right bg-gray-200 text-sm p-1 m-1">タイトル</div>
+                <div class="w-40">
+                    <input type=text v-model="form.title" size=15 class="p-1 m-1 text-sm w-full border" />
+                </div>
+                <div v-if="form.errors.title" class="p-1 m-1 text-sm text-red-400">{{ form.errors.title }}</div>
             </div>
-            <div v-if="bookmarkError.title" class="p-1 m-1 text-sm text-red-400">{{ bookmarkError.title }}</div>
-
-        </div>
-        <div class="flex w-full">
-            <div class="w-20 text-right bg-gray-200 text-sm p-1 m-1">URL</div>
-            <div class="w-40">
-                <input type=text name=newUrl v-model="newUrl" size=15 class="p-1 m-1 text-sm w-full border" />
+            <div class="flex w-full">
+                <div class="w-20 text-right bg-gray-200 text-sm p-1 m-1">URL</div>
+                <div class="w-40">
+                    <input type=text v-model="form.url" size=15 class="p-1 m-1 text-sm w-full border" />
+                </div>
+                <div v-if="form.errors.url" class="p-1 m-1 text-sm text-red-400">{{ form.errors.url }}</div>
             </div>
-            <div v-if="bookmarkError.url" class="p-1 m-1 text-sm text-red-400">{{ bookmarkError.url }}</div>
-        </div>
-        <button v-on:click="addBookmark" class="border border-gray-400 m-1 p-1 text-sm">ブックマーク追加</button>
-        <button v-if="cancelToken.cancel" v-on:click="cancelToken.cancel()" class="border border-red-400 m-1 p-1 text-sm">キャンセル</button>
+            <button type="submit" class="border border-gray-400 m-1 p-1 text-sm" :disabled="form.processing" v-bind:class="{'cursor-not-allowed': form.processing}">ブックマーク追加</button>
+            <button v-if="form.processing" @click="form.cancel()" type="button" class="border bg-red-200 m-1 p-1 text-sm">送信中止</button>
+            <button @click="form.reset()" type="reset" class="border bg-gray-200 m-1 p-1 text-sm" :disabled="!form.isDirty" v-bind:class="{'cursor-not-allowed': !form.isDirty}">リセット</button>
+            <button @click="form.defaults()" type="button" class="border bg-gray-200 m-1 p-1 text-sm" :disabled="!form.isDirty" v-bind:class="{'cursor-not-allowed': !form.isDirty}">初期値として設定</button>
+            <div v-if="form.recentlySuccessful" class="p-1 m-1 bg-green-200">送信が完了しました。</div>
+        </form>
     </Layout>
 </template>
