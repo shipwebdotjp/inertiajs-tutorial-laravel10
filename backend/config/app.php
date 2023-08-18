@@ -185,4 +185,6 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'max_bookmarks' => env('MAX_BOOKMARKS'),
+
 ];

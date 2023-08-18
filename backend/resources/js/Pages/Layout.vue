@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from "vue";
-import { Link, Head } from '@inertiajs/vue3'
+import { Link, Head, usePage } from '@inertiajs/vue3'
 
+const page = usePage()
 defineProps({ title: String })
 const searchWord = ref('');
 </script>
@@ -17,6 +18,9 @@ const searchWord = ref('');
             <Link as="button" method="get" :href="route('bookmark.search',{queryWord: searchWord})" preserve-state class="border border-gray-400 m-1 p-1 text-sm">ブックマーク検索</Link>
         </header>
         <article class="max-w-screen-sm">
+            <div v-if="page.props.flash.message" class="bg-green-200 p-2 m-1">
+                {{ page.props.flash.message }}
+            </div>
             <slot />
         </article>
     </main>

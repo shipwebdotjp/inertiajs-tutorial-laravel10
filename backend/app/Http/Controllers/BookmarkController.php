@@ -11,7 +11,7 @@ class BookmarkController extends Controller
 {
     public function index () 
     {
-        return Inertia::render('Bookmark/Index',['bookmarks' => Bookmark::all()]);
+        return Inertia::render('Bookmark/Index',['bookmarks' => fn() => Bookmark::all()]);
     }
     
     //検索メソッド
@@ -39,13 +39,13 @@ class BookmarkController extends Controller
         $bookmark->url = $request->url;
         $bookmark->save();
 
-        return to_route('bookmark.index'); //追加後ブックマーク一覧ページへリダイレクト
+        return to_route('bookmark.index')->with('message', '追加しました'); //追加後ブックマーク一覧ページへリダイレクト
     }
 
     //削除メソッド
     public function destroy ($id) 
     {
         Bookmark::destroy($id);
-        return to_route('bookmark.index'); //削除後ブックマーク一覧ページへリダイレクト
+        return to_route('bookmark.index')->with('message', '削除しました'); //削除後ブックマーク一覧ページへリダイレクト
     }
 }
